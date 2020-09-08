@@ -6,6 +6,7 @@ from qiskit.quantum_info.operators import Operator
 from cir_input.qasm import CreateCircuitFromQASM
 from cir_input.circuit_DG import CreateDGfromQASMfile
 from cir_input.circuit_process import get_real_qubit_num,get_gates_number
+from func_timeout import func_set_timeout
 import os
 
 def CirData2QMDD(data, H=False):
@@ -22,6 +23,7 @@ def CirData2QMDD(data, H=False):
         qmdd = get_cnot_QMDD_n(qubits)       
     return qmdd
 
+@func_set_timeout(3600)
 def Simulation_with_QMDD(cir,num_qubit):
     """To simulate a quantum circuit with QMDD"""
     data_list1 = cir._data
@@ -55,12 +57,15 @@ def QMDD_simulate_test():
         gate_num = get_gates_number(dag_cir)
         print('gates number:',gate_num)
    
-        t_start = time.time()
-        qmdd, max_node_num=Simulation_with_QMDD(cir, num_qubit)
-        run_time=time.time()-t_start
-        print('Run time:',run_time)
-        print('Max node num:',max_node_num)
-        print('Final node number:',qmdd.node_number())
+        try:
+            t_start = time.time()
+            qmdd, max_node_num=Simulation_with_QMDD(cir, num_qubit)
+            run_time=time.time()-t_start
+            print('Run time:',run_time)
+            print('Max node num:',max_node_num)
+            print('Final node number:',qmdd.node_number())
+        except:
+            print('Time out!')
         print('----------------')
     
 
