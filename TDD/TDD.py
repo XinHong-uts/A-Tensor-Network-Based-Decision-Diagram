@@ -220,7 +220,9 @@ def diag_matrix_2_TDD(U,var):
     high=TDD(node2)
     high.weight=U[1][1]
     if high==low:
-        return high
+        tdd=low
+        tdd.index_set=copy.copy(var)
+        return tdd
     
     x=var[0].key
     tdd=normalize(x,low,high)
